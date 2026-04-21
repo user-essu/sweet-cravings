@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="shortcut icon" href="favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Cravings | Artisan Bakery & Café</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --chocolate: #5D4037;
+            --caramel: #D4A373;
+            --cream: #FFF8F0;
+            --coffee: #2C1810;
+            --peach: #FAEDCD;
+            --white: #FFFFFF;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: var(--coffee);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; font-weight: 700; line-height: 1.2; }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; width: 100%; background: rgba(255,248,240,0.98);
+            backdrop-filter: blur(10px); z-index: 1000; padding: 0.8rem 5%;
+            box-shadow: 0 2px 20px rgba(93,64,55,0.08);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700;
+            color: var(--chocolate); text-decoration: none; display: flex; align-items: center; gap: 0.8rem;
+        }
+        .logo-img {
+            width: 45px; height: 45px; border-radius: 50%; background: var(--chocolate);
+            display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 1.2rem; border: 3px solid var(--caramel);
+        }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+        .nav-links a {
+            text-decoration: none; color: var(--coffee); font-weight: 500; font-size: 0.95rem;
+            transition: color 0.3s; position: relative; cursor: pointer;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--caramel); }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px;
+            background: var(--caramel); transition: width 0.3s;
+        }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .cart-icon { position: relative; cursor: pointer; font-size: 1.2rem; color: var(--chocolate); }
+        .cart-count {
+            position: absolute; top: -8px; right: -8px; background: var(--caramel); color: white;
+            font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-weight: 600;
+        }
+        .mobile-menu-btn { display: none; font-size: 1.5rem; cursor: pointer; color: var(--chocolate); background: none; border: none; }
+
+        /* Pages */
+        .page { display: none; animation: fadeIn 0.5s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hero */
+        .hero {
+            margin-top: 70px; min-height: 90vh; background: linear-gradient(135deg, rgba(93,64,55,0.85), rgba(44,24,16,0.9));
+            display: flex; align-items: center; justify-content: center; text-align: center; color: var(--white);
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        .hero-content { position: relative; z-index: 1; padding: 2rem; }
+        .hero-content h1 { font-size: 3.5rem; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .hero-content p { font-size: 1.2rem; margin-bottom: 2rem; font-weight: 300; opacity: 0.95; max-width: 600px; margin: 0 auto 2rem; }
+        .btn {
+            display: inline-block; padding: 1rem 2.5rem; background: var(--caramel); color: var(--white);
+            text-decoration: none; border-radius: 50px; font-weight: 600; transition: all 0.3s;
+            border: none; cursor: pointer; font-size: 1rem; font-family: 'Inter', sans-serif;
+        }
+        .btn:hover { background: var(--chocolate); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(93,64,55,0.3); }
+        .btn-outline { background: transparent; border: 2px solid var(--white); margin-left: 1rem; }
+        .btn-outline:hover { background: var(--white); color: var(--chocolate); }
+
+        /* Sections */
+        section { padding: 100px 5%; max-width: 1400px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header h2 { font-size: 2.5rem; color: var(--chocolate); margin-bottom: 1rem; }
+        .section-header p { color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        .divider { width: 60px; height: 3px; background: var(--caramel); margin: 1rem auto; border-radius: 2px; }
+
+        /* Products */
+        .featured-grid, .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem; }
+        .product-card {
+            background: var(--white); border-radius: 20px; overflow: hidden;
+            box-shadow: 0 5px 20px rgba(93,64,55,0.08); transition: all 0.3s; position: relative;
+        }
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(93,64,55,0.15); }
+        .product-image { height: 250px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .product-badge {
+            position: absolute; top: 15px; left: 15px; background: var(--caramel); color: white;
+            padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+        }
+        .product-info { padding: 1.5rem; }
+        .product-info h3 { font-size: 1.3rem; color: var(--chocolate); margin-bottom: 0.5rem; }
+        .product-info p { color: #666; font-size: 0.9rem; margin-bottom: 1rem; }
+        .product-footer { display: flex; justify-content: space-between; align-items: center; }
+        .price { font-size: 1.4rem; font-weight: 700; color: var(--caramel); }
+        .add-to-cart {
+            width: 40px; height: 40px; border-radius: 50%; background: var(--peach); border: none;
+            color: var(--chocolate); cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem;
+        }
+        .add-to-cart:hover { background: var(--caramel); color: white; transform: scale(1.1); }
+
+        /* Features Section */
+        .features { background: var(--white); border-radius: 30px; margin: 0 5% 100px; padding: 80px 5%; max-width: 1400px; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; text-align: center; }
+        .feature-item { padding: 2rem; }
+        .feature-icon {
+            width: 80px; height: 80px; background: var(--peach); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;
+            font-size: 1.8rem; color: var(--chocolate);
+        }
+        .feature-item h3 { margin-bottom: 0.8rem; color: var(--chocolate); }
+        .feature-item p { color: #666; font-size: 0.95rem; }
+
+        /* Menu Page */
+        .menu-filters { display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 0.6rem 1.5rem; border: 2px solid var(--chocolate); background: transparent;
+            color: var(--chocolate); border-radius: 30px; cursor: pointer; font-weight: 500;
+            transition: all 0.3s; font-family: 'Inter', sans-serif; font-size: 0.95rem;
+        }
+        .filter-btn.active, .filter-btn:hover { background: var(--chocolate); color: var(--white); }
+
+        /* About Page */
+        .about-hero { margin-top: 70px; padding: 100px 5%; background: linear-gradient(135deg, var(--peach), var(--cream)); text-align: center; }
+        .about-hero h1 { font-size: 3rem; color: var(--chocolate); margin-bottom: 1rem; }
+        .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; max-width: 1200px; margin: 0 auto; padding: 100px 5%; }
+        .about-image { border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px rgba(93,64,55,0.15); background: var(--peach); }
+        .about-image svg { width: 100%; height: auto; display: block; }
+        .about-text h2 { font-size: 2rem; color: var(--chocolate); margin-bottom: 1.5rem; }
+        .about-text p { margin-bottom: 1rem; color: #555; line-height: 1.8; }
+        .values { background: var(--white); padding: 100px 5%; }
+        .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .value-card { padding: 2.5rem; background: var(--cream); border-radius: 20px; border-left: 4px solid var(--caramel); }
+        .value-card h3 { color: var(--chocolate); margin-bottom: 0.8rem; }
+
+        /* Contact Page */
+        .contact-hero { margin-top: 70px; padding: 80px 5%; background: var(--chocolate); color: var(--white); text-align: center; }
+        .contact-hero h1 { font-size: 3rem; }
+        .contact-container { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; max-width: 1200px; margin: 0 auto; padding: 100px 5%; }
+        .contact-info h3 { font-size: 1.8rem; color: var(--chocolate); margin-bottom: 1.5rem; }
+        .info-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: flex-start; }
+        .info-item i { color: var(--caramel); font-size: 1.2rem; margin-top: 0.3rem; width: 24px; text-align: center; }
+        .contact-form { background: var(--white); padding: 3rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(93,64,55,0.1); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--chocolate); }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 0.8rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px;
+            font-family: 'Inter', sans-serif; transition: border-color 0.3s; font-size: 1rem;
+        }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--caramel); }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+
+        /* Footer */
+        footer { background: var(--chocolate); color: var(--white); padding: 60px 5% 30px; text-align: center; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; text-align: left; margin-bottom: 3rem; }
+        .footer-section h3 { font-family: 'Playfair Display', serif; margin-bottom: 1rem; color: var(--caramel); }
+        .footer-section p, .footer-section a { color: rgba(255,255,255,0.8); text-decoration: none; line-height: 2; transition: color 0.3s; }
+        .footer-section a:hover { color: var(--caramel); }
+        .social-links { display: flex; gap: 1rem; margin-top: 1rem; }
+        .social-links a { width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: white; text-decoration: none; }
+        .social-links a:hover { background: var(--caramel); transform: translateY(-3px); }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+
+        /* Cart Sidebar */
+        .cart-sidebar { position: fixed; top: 0; right: -450px; width: 400px; height: 100vh; background: var(--white); box-shadow: -5px 0 30px rgba(0,0,0,0.1); z-index: 2000; transition: right 0.3s ease; padding: 2rem; overflow-y: auto; }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--cream); }
+        .cart-header h2 { color: var(--chocolate); font-family: 'Playfair Display', serif; }
+        .close-cart { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--chocolate); }
+        .cart-item { display: flex; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #eee; align-items: center; }
+        .cart-item-image { width: 70px; height: 70px; border-radius: 10px; background-size: cover; background-position: center; flex-shrink: 0; }
+        .cart-item-details { flex: 1; }
+        .cart-item-details h4 { color: var(--chocolate); margin-bottom: 0.3rem; font-size: 1rem; }
+        .cart-item-details p { color: var(--caramel); font-weight: 600; }
+        .remove-item { background: none; border: none; color: #999; cursor: pointer; font-size: 1rem; padding: 0.5rem; }
+        .remove-item:hover { color: #c44; }
+        .cart-total { margin-top: 2rem; padding-top: 1rem; border-top: 2px solid var(--chocolate); display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 700; color: var(--chocolate); }
+        .checkout-btn { width: 100%; margin-top: 1.5rem; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; display: none; opacity: 0; transition: opacity 0.3s; }
+        .overlay.active { display: block; opacity: 1; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 30px; right: 30px; background: var(--chocolate); color: white; padding: 1rem 2rem; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); z-index: 3000; transform: translateY(100px); opacity: 0; transition: all 0.3s; font-weight: 500; }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* Mobile Menu */
+        .mobile-nav { display: none; position: fixed; top: 70px; left: 0; width: 100%; background: var(--white); z-index: 999; padding: 1rem 5%; box-shadow: 0 5px 20px rgba(0,0,0,0.1); flex-direction: column; gap: 1rem; }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a { color: var(--coffee); text-decoration: none; font-weight: 500; padding: 0.8rem 0; border-bottom: 1px solid #eee; }
+        .mobile-nav a:hover { color: var(--caramel); }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            .hero-content h1 { font-size: 2.2rem; }
+            .hero-content p { font-size: 1rem; }
+            .btn-outline { margin-left: 0; margin-top: 1rem; }
+            .about-content, .contact-container { grid-template-columns: 1fr; }
+            .cart-sidebar { width: 100%; right: -100%; }
+            section { padding: 60px 5%; }
+            .menu-filters { gap: 0.5rem; }
+            .filter-btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+        }
+
+        /* SVG Product Image Backgrounds */
+        .svg-product-bg { width: 100%; height: 100%; }
+    </style>
+</head>
+<body>
+
+<!-- ==================== SVG IMAGE LIBRARY ==================== -->
+<svg style="display:none">
+<defs>
+<!-- Chocolate Cake -->
+<symbol id="img-choco" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#FFF8F0"/>
+  <ellipse cx="300" cy="320" rx="140" ry="25" fill="#E8E8E8"/>
+  <rect x="180" y="180" width="240" height="130" rx="12" fill="#5D4037"/>
+  <rect x="170" y="150" width="260" height="45" rx="15" fill="#3E2723"/>
+  <ellipse cx="300" cy="150" rx="130" ry="20" fill="#3E2723"/>
+  <polygon points="220,140 235,110 250,145" fill="#2C1810"/>
+  <polygon points="260,138 275,105 290,142" fill="#2C1810"/>
+  <polygon points="300,140 315,108 330,145" fill="#2C1810"/>
+  <polygon points="340,138 355,110 370,142" fill="#2C1810"/>
+  <ellipse cx="300" cy="115" rx="22" ry="22" fill="#C62828"/>
+  <ellipse cx="292" cy="108" rx="6" ry="6" fill="#FFCDD2"/>
+  <path d="M 180 200 Q 210 210 240 200 Q 270 210 300 200 Q 330 210 360 200 Q 390 210 420 200" stroke="#4E342E" stroke-width="3" fill="none"/>
+</symbol>
+
+<!-- Strawberry Cheesecake -->
+<symbol id="img-cheese" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#FFF8F0"/>
+  <ellipse cx="300" cy="320" rx="140" ry="25" fill="#E8E8E8"/>
+  <rect x="180" y="260" width="240" height="35" rx="5" fill="#D4A373"/>
+  <rect x="180" y="170" width="240" height="95" rx="5" fill="#FFF3E0"/>
+  <ellipse cx="300" cy="170" rx="120" ry="18" fill="#FFF3E0"/>
+  <ellipse cx="300" cy="155" rx="115" ry="22" fill="#EF5350"/>
+  <ellipse cx="250" cy="135" rx="22" ry="22" fill="#C62828"/>
+  <ellipse cx="300" cy="125" rx="22" ry="22" fill="#C62828"/>
+  <ellipse cx="350" cy="135" rx="22" ry="22" fill="#C62828"/>
+  <ellipse cx="245" cy="128" rx="5" ry="5" fill="#FFCDD2"/>
+  <ellipse cx="295" cy="118" rx="5" ry="5" fill="#FFCDD2"/>
+  <ellipse cx="345" cy="128" rx="5" ry="5" fill="#FFCDD2"/>
+  <circle cx="250" cy="140" r="1.5" fill="#FFEBEE"/><circle cx="255" cy="138" r="1.5" fill="#FFEBEE"/>
+  <circle cx="300" cy="130" r="1.5" fill="#FFEBEE"/><circle cx="305" cy="132" r="1.5" fill="#FFEBEE"/>
+  <circle cx="350" cy="140" r="1.5" fill="#FFEBEE"/><circle cx="355" cy="138" r="1.5" fill="#FFEBEE"/>
+</symbol>
+
+<!-- Croissant -->
+<symbol id="img-croissant" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#FFF8F0"/>
+  <ellipse cx="300" cy="330" rx="130" ry="18" fill="#E0D5C8"/>
+  <path d="M 150 220 Q 150 120 300 120 Q 450 120 450 220 Q 450 280 300 280 Q 150 280 150 220" fill="#D4A373"/>
+  <path d="M 170 220 Q 170 140 300 140 Q 430 140 430 220 Q 430 260 300 260 Q 170 260 170 220" fill="#E6C29A"/>
+  <path d="M 200 220 Q 200 160 300 160 Q 400 160 400 220 Q 400 240 300 240 Q 200 240 200 220" fill="#FFF8F0"/>
+  <path d="M 160 200 Q 200 180 240 200" stroke="#B08D55" stroke-width="2" fill="none"/>
+  <path d="M 360 200 Q 400 180 440 200" stroke="#B08D55" stroke-width="2" fill="none"/>
+  <path d="M 200 240 Q 250 220 300 240 Q 350 220 400 240" stroke="#B08D55" stroke-width="2" fill="none"/>
+</symbol>
+
+<!-- Red Velvet Cupcake -->
+<symbol id="img-cupcake" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#FFF8F0"/>
+  <ellipse cx="300" cy="330" rx="80" ry="15" fill="#E0D5C8"/>
+  <polygon points="240,300 360,300 350,220 250,220" fill="#B0BEC5"/>
+  <line x1="255" y1="300" x2="260" y2="220" stroke="#90A4AE" stroke-width="2"/>
+  <line x1="270" y1="300" x2="275" y2="220" stroke="#90A4AE" stroke-width="2"/>
+  <line x1="285" y1="300" x2="290" y2="220" stroke="#90A4AE" stroke-width="2"/>
+  <line x1="300" y1="300" x2="305" y2="220" stroke="#90A4AE" stroke-width="2"/>
+  <line x1="315" y1="300" x2="320" y2="220" stroke="#90A4AE" stroke-width="2"/>
+  <line x1="330" y1="300" x2="335" y2="220" stroke="#90A4AE" stroke-width="2"/>
+  <line x1="345" y1="300" x2="350" y2="220" stroke="#90A4AE" stroke-width="2"/>
+  <ellipse cx="300" cy="220" rx="65" ry="25" fill="#B71C1C"/>
+  <ellipse cx="300" cy="180" rx="55" ry="30" fill="#FFFFFF"/>
+  <ellipse cx="300" cy="140" rx="40" ry="28" fill="#FFFFFF"/>
+  <ellipse cx="300" cy="105" rx="25" ry="20" fill="#FFFFFF"/>
+  <circle cx="300" cy="90" r="8" fill="#C62828"/>
+  <circle cx="300" cy="86" r="3" fill="#FFCDD2"/>
+  <ellipse cx="250" cy="210" rx="4" ry="3" fill="#B71C1C"/>
+  <ellipse cx="350" cy="210" rx="4" ry="3" fill="#B71C1C"/>
+  <ellipse cx="270" cy="215" rx="4" ry="3" fill="#B71C1C"/>
+  <ellipse cx="330" cy="215" rx="4" ry="3" fill="#B71C1C"/>
+</symbol>
+
+<!-- Ube Cake -->
+<symbol id="img-ube" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#FFF8F0"/>
+  <ellipse cx="300" cy="320" rx="140" ry="25" fill="#E8E8E8"/>
+  <rect x="180" y="200" width="240" height="100" rx="10" fill="#7E57C2"/>
+  <rect x="185" y="170" width="230" height="35" rx="8" fill="#B39DDB"/>
+  <rect x="175" y="140" width="250" height="38" rx="12" fill="#7E57C2"/>
+  <ellipse cx="300" cy="140" rx="125" ry="18" fill="#7E57C2"/>
+  <!-- Coconut flakes -->
+  <ellipse cx="220" cy="135" rx="4" ry="3" fill="white"/><ellipse cx="240" cy="130" rx="4" ry="3" fill="white"/>
+  <ellipse cx="260" cy="138" rx="4" ry="3" fill="white"/><ellipse cx="280" cy="132" rx="4" ry="3" fill="white"/>
+  <ellipse cx="300" cy="138" rx="4" ry="3" fill="white"/><ellipse cx="320" cy="130" rx="4" ry="3" fill="white"/>
+  <ellipse cx="340" cy="136" rx="4" ry="3" fill="white"/><ellipse cx="360" cy="132" rx="4" ry="3" fill="white"/>
+  <ellipse cx="380" cy="138" rx="4" ry="3" fill="white"/>
+</symbol>
+
+<!-- Ensaymada -->
+<symbol id="img-ensaymada" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#FFF8F0"/>
+  <ellipse cx="300" cy="330" rx="120" ry="20" fill="#E0D5C8"/>
+  <ellipse cx="300" cy="240" rx="100" ry="75" fill="#FFCC80"/>
+  <ellipse cx="300" cy="230" rx="85" ry="60" fill="#FFE0B2"/>
+  <ellipse cx="300" cy="220" rx="65" ry="45" fill="#FFF3E0"/>
+  <!-- Swirl lines -->
+  <path d="M 250 220 Q 300 180 350 220" stroke="#FFAB91" stroke-width="3" fill="none"/>
+  <path d="M 260 240 Q 300 200 340 240" stroke="#FFAB91" stroke-width="3" fill="none"/>
+  <!-- Cheese topping -->
+  <rect x="250" y="190" width="40" height="12" rx="3" fill="#FFD54F"/>
+  <rect x="300" y="185" width="45" height="12" rx="3" fill="#FFD54F"/>
+  <rect x="270" y="205" width="35" height="10" rx="3" fill="#FFD54F"/>
+  <rect x="320" y="200" width="30" height="10" rx="3" fill="#FFD54F"/>
+</symbol>
+
+<!-- Spanish Latte -->
+<symbol id="img-latte" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#FFF8F0"/>
+  <ellipse cx="300" cy="340" rx="100" ry="15" fill="#E0D5C8"/>
+  <!-- Cup -->
+  <path d="M 220 150 L 230 320 Q 300 340 370 320 L 380 150" fill="#FFFFFF" stroke="#E0E0E0" stroke-width="2"/>
+  <ellipse cx="300" cy="150" rx="80" ry="18" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="2"/>
+  <!-- Coffee -->
+  <ellipse cx="300" cy="150" rx="72" ry="14" fill="#5D4037"/>
+  <!-- Handle -->
+  <path d="M 375 180 Q 420 180 420 220 Q 420 260 370 260" stroke="#FFFFFF" stroke-width="12" fill="none"/>
+  <path d="M 375 180 Q 420 180 420 220 Q 420 260 370 260" stroke="#E0E0E0" stroke-width="2" fill="none"/>
+  <!-- Steam -->
+  <path d="M 280 120 Q 270 90 290 70" stroke="#E0E0E0" stroke-width="3" fill="none" opacity="0.5"/>
+  <path d="M 300 115 Q 310 85 295 65" stroke="#E0E0E0" stroke-width="3" fill="none" opacity="0.5"/>
+  <path d="M 320 120 Q 310 90 325 70" stroke="#E0E0E0" stroke-width="3" fill="none" opacity="0.5"/>
+  <!-- Latte art heart -->
+  <path d="M 300 155 Q 290 145 300 140 Q 310 145 300 155" fill="#D4A373"/>
+</symbol>
+
+<!-- Matcha Frappe -->
+<symbol id="img-matcha" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#FFF8F0"/>
+  <ellipse cx="300" cy="340" rx="100" ry="15" fill="#E0D5C8"/>
+  <!-- Cup -->
+  <path d="M 220 160 L 230 310 Q 300 330 370 310 L 380 160" fill="#C8E6C9" stroke="#A5D6A7" stroke-width="2"/>
+  <ellipse cx="300" cy="160" rx="80" ry="18" fill="#E8F5E9" stroke="#A5D6A7" stroke-width="2"/>
+  <!-- Matcha liquid -->
+  <ellipse cx="300" cy="160" rx="72" ry="14" fill="#7CB342"/>
+  <!-- Dome lid -->
+  <path d="M 220 160 Q 300 80 380 160" fill="rgba(255,255,255,0.4)" stroke="#E0E0E0" stroke-width="2"/>
+  <!-- Straw -->
+  <line x1="320" y1="160" x2="340" y2="60" stroke="#EF5350" stroke-width="8" stroke-linecap="round"/>
+  <!-- Whipped cream -->
+  <circle cx="300" cy="130" r="25" fill="white"/><circle cx="280" cy="140" r="20" fill="white"/>
+  <circle cx="320" cy="140" r="20" fill="white"/><circle cx="300" cy="110" r="18" fill="white"/>
+</symbol>
+
+<!-- About Baker Illustration -->
+<symbol id="img-baker" viewBox="0 0 800 600">
+  <rect width="800" height="600" fill="#FAEDCD"/>
+  <!-- Kitchen background -->
+  <rect x="0" y="0" width="800" height="400" fill="#FFF8F0"/>
+  <rect x="100" y="50" width="200" height="250" fill="#E6EE9C" rx="5"/>
+  <rect x="120" y="70" width="160" height="210" fill="#C5E1A5" rx="3"/>
+  <rect x="500" y="50" width="200" height="250" fill="#E6EE9C" rx="5"/>
+  <rect x="520" y="70" width="160" height="210" fill="#C5E1A5" rx="3"/>
+  <!-- Counter -->
+  <rect x="0" y="350" width="800" height="250" fill="#D4A373"/>
+  <rect x="0" y="350" width="800" height="20" fill="#5D4037"/>
+  <!-- Baker character -->
+  <ellipse cx="400" cy="280" rx="60" ry="70" fill="#FFCC80"/> <!-- head -->
+  <ellipse cx="400" cy="250" rx="65" ry="55" fill="white"/> <!-- chef hat base -->
+  <ellipse cx="400" cy="200" rx="50" ry="40" fill="white"/> <!-- chef hat top -->
+  <circle cx="375" cy="275" r="6" fill="#2C1810"/> <!-- eye -->
+  <circle cx="425" cy="275" r="6" fill="#2C1810"/> <!-- eye -->
+  <path d="M 385 295 Q 400 310 415 295" stroke="#C62828" stroke-width="3" fill="none"/> <!-- smile -->
+  <ellipse cx="400" cy="285" rx="8" ry="5" fill="#FFAB91"/> <!-- blush -->
+  <!-- Apron -->
+  <rect x="340" y="340" width="120" height="180" rx="10" fill="white"/>
+  <rect x="350" y="380" width="100" height="100" rx="5" fill="#FAEDCD"/>
+  <rect x="370" y="340" width="60" height="40" rx="5" fill="#5D4037"/>
+  <!-- Arms holding tray -->
+  <ellipse cx="280" cy="380" rx="40" ry="15" fill="#FFCC80" transform="rotate(-20 280 380)"/>
+  <ellipse cx="520" cy="380" rx="40" ry="15" fill="#FFCC80" transform="rotate(20 520 380)"/>
+  <!-- Tray with cake -->
+  <rect x="250" y="360" width="300" height="15" rx="5" fill="#8D6E63"/>
+  <rect x="280" y="320" width="100" height="45" rx="8" fill="#5D4037"/>
+  <rect x="275" y="310" width="110" height="15" rx="5" fill="#3E2723"/>
+  <ellipse cx="330" cy="305" rx="12" ry="12" fill="#C62828"/>
+  <rect x="420" y="325" width="80" height="40" rx="8" fill="#7E57C2"/>
+  <rect x="415" y="315" width="90" height="15" rx="5" fill="#5E35B1"/>
+</symbol>
+</defs>
+</svg>
+
+<!-- Navigation -->
+<nav>
+    <a href="#" class="logo" onclick="showPage('home'); return false;">
+        <div class="logo-img"><i class="fas fa-cookie-bite"></i></div>
+        <span>Sweet Cravings</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="#" class="active" onclick="showPage('home'); return false;">Home</a></li>
+        <li><a href="#" onclick="showPage('menu'); return false;">Menu</a></li>
+        <li><a href="#" onclick="showPage('about'); return false;">About</a></li>
+        <li><a href="#" onclick="showPage('contact'); return false;">Contact</a></li>
+        <li>
+            <div class="cart-icon" onclick="toggleCart()">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </li>
+    </ul>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-nav" id="mobileNav">
+    <a href="#" onclick="showPage('home'); toggleMobileMenu(); return false;">Home</a>
+    <a href="#" onclick="showPage('menu'); toggleMobileMenu(); return false;">Menu</a>
+    <a href="#" onclick="showPage('about'); toggleMobileMenu(); return false;">About</a>
+    <a href="#" onclick="showPage('contact'); toggleMobileMenu(); return false;">Contact</a>
+</div>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+
+<!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <h2>Your Order</h2>
+        <button class="close-cart" onclick="toggleCart()"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="cartItems"><p style="color:#999;text-align:center;margin-top:3rem">Your cart is empty</p></div>
+    <div class="cart-total" id="cartTotal" style="display:none">
+        <span>Total:</span><span id="totalAmount">₱0.00</span>
+    </div>
+    <button class="btn checkout-btn" style="display:none" id="checkoutBtn" onclick="showToast('Checkout coming soon!')">Proceed to Checkout</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">Added to cart!</div>
+
+<!-- ==================== HOME PAGE ==================== -->
+<div id="home" class="page active">
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Handcrafted Desserts<br>& Savory Delights</h1>
+            <p>Freshly baked every morning with love, premium ingredients, and a touch of magic. Taste the difference of true artisan craftsmanship.</p>
+            <div>
+                <a href="#" class="btn" onclick="showPage('menu'); return false;">Order Now</a>
+                <a href="#" class="btn btn-outline" onclick="showPage('about'); return false;">Our Story</a>
+            </div>
+        </div>
+    </div>
+
+    <section>
+        <div class="section-header">
+            <h2>Customer Favorites</h2>
+            <div class="divider"></div>
+            <p>Our most loved creations, baked fresh daily for your indulgence</p>
+        </div>
+        <div class="featured-grid">
+            <div class="product-card">
+                <div class="product-image" style="background:#FFF8F0">
+                    <svg class="svg-product-bg"><use href="#img-choco"/></svg>
+                    <span class="product-badge">Bestseller</span>
+                </div>
+                <div class="product-info">
+                    <h3>Classic Chocolate Cake</h3>
+                    <p>Rich, moist layers with dark ganache frosting</p>
+                    <div class="product-footer">
+                        <span class="price">₱850</span>
+                        <button class="add-to-cart" onclick="addToCart('Classic Chocolate Cake',850,'choco')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image" style="background:#FFF8F0">
+                    <svg class="svg-product-bg"><use href="#img-cheese"/></svg>
+                    <span class="product-badge">New</span>
+                </div>
+                <div class="product-info">
+                    <h3>Strawberry Cheesecake</h3>
+                    <p>Creamy New York style with fresh strawberry compote</p>
+                    <div class="product-footer">
+                        <span class="price">₱720</span>
+                        <button class="add-to-cart" onclick="addToCart('Strawberry Cheesecake',720,'cheese')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image" style="background:#FFF8F0">
+                    <svg class="svg-product-bg"><use href="#img-croissant"/></svg>
+                </div>
+                <div class="product-info">
+                    <h3>Artisan Croissants</h3>
+                    <p>Buttery, flaky French pastry with golden layers</p>
+                    <div class="product-footer">
+                        <span class="price">₱180</span>
+                        <button class="add-to-cart" onclick="addToCart('Artisan Croissants',180,'croissant')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image" style="background:#FFF8F0">
+                    <svg class="svg-product-bg"><use href="#img-cupcake"/></svg>
+                    <span class="product-badge">Popular</span>
+                </div>
+                <div class="product-info">
+                    <h3>Red Velvet Cupcakes</h3>
+                    <p>Velvety crimson cake with cream cheese frosting</p>
+                    <div class="product-footer">
+                        <span class="price">₱120</span>
+                        <button class="add-to-cart" onclick="addToCart('Red Velvet Cupcakes',120,'cupcake')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="features">
+        <div class="section-header">
+            <h2>Why Choose Sweet Cravings?</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                <h3>Premium Ingredients</h3>
+                <p>We use only the finest local and imported ingredients, sourced fresh daily for unmatched quality and flavor.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                <h3>Made with Love</h3>
+                <p>Every item is handcrafted by our passionate bakers who put their heart into every batch they create.</p>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon"><i class="fas fa-truck"></i></div>
+                <h3>Fast Delivery</h3>
+                <p>Same-day delivery available for orders placed before 2 PM. Your treats arrive fresh and beautiful.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== MENU PAGE ==================== -->
+<div id="menu" class="page">
+    <div class="about-hero" style="background:linear-gradient(135deg,var(--chocolate),#3E2723);color:white">
+        <h1>Our Menu</h1>
+        <p style="color:rgba(255,255,255,0.9);margin-top:1rem">Explore our complete collection of artisan baked goods</p>
+    </div>
+
+    <section>
+        <div class="menu-filters">
+            <button class="filter-btn active" onclick="filterMenu('all',this)">All Items</button>
+            <button class="filter-btn" onclick="filterMenu('cakes',this)">Cakes</button>
+            <button class="filter-btn" onclick="filterMenu('pastries',this)">Pastries</button>
+            <button class="filter-btn" onclick="filterMenu('beverages',this)">Beverages</button>
+        </div>
+
+        <div class="menu-grid" id="menuGrid">
+            <div class="product-card" data-category="cakes">
+                <div class="product-image" style="background:#FFF8F0"><svg class="svg-product-bg"><use href="#img-choco"/></svg></div>
+                <div class="product-info">
+                    <h3>Classic Chocolate Cake</h3>
+                    <p>Rich, moist layers with dark ganache frosting and chocolate shavings</p>
+                    <div class="product-footer">
+                        <span class="price">₱850</span>
+                        <button class="add-to-cart" onclick="addToCart('Classic Chocolate Cake',850,'choco')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="cakes">
+                <div class="product-image" style="background:#FFF8F0"><svg class="svg-product-bg"><use href="#img-cheese"/></svg></div>
+                <div class="product-info">
+                    <h3>Strawberry Cheesecake</h3>
+                    <p>Creamy New York style with fresh strawberry compote topping</p>
+                    <div class="product-footer">
+                        <span class="price">₱720</span>
+                        <button class="add-to-cart" onclick="addToCart('Strawberry Cheesecake',720,'cheese')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="cakes">
+                <div class="product-image" style="background:#FFF8F0"><svg class="svg-product-bg"><use href="#img-ube"/></svg></div>
+                <div class="product-info">
+                    <h3>Ube Moist Cake</h3>
+                    <p>Filipino favorite with real ube halaya and creamy frosting</p>
+                    <div class="product-footer">
+                        <span class="price">₱780</span>
+                        <button class="add-to-cart" onclick="addToCart('Ube Moist Cake',780,'ube')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="pastries">
+                <div class="product-image" style="background:#FFF8F0"><svg class="svg-product-bg"><use href="#img-croissant"/></svg></div>
+                <div class="product-info">
+                    <h3>Butter Croissant</h3>
+                    <p>Authentic French recipe with 27 layers of buttery goodness</p>
+                    <div class="product-footer">
+                        <span class="price">₱180</span>
+                        <button class="add-to-cart" onclick="addToCart('Butter Croissant',180,'croissant')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="pastries">
+                <div class="product-image" style="background:#FFF8F0"><svg class="svg-product-bg"><use href="#img-cupcake"/></svg></div>
+                <div class="product-info">
+                    <h3>Red Velvet Cupcake</h3>
+                    <p>Velvety crimson cake with tangy cream cheese frosting</p>
+                    <div class="product-footer">
+                        <span class="price">₱120</span>
+                        <button class="add-to-cart" onclick="addToCart('Red Velvet Cupcake',120,'cupcake')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="pastries">
+                <div class="product-image" style="background:#FFF8F0"><svg class="svg-product-bg"><use href="#img-ensaymada"/></svg></div>
+                <div class="product-info">
+                    <h3>Ensaymada</h3>
+                    <p>Soft, fluffy brioche topped with butter, sugar, and cheese</p>
+                    <div class="product-footer">
+                        <span class="price">₱95</span>
+                        <button class="add-to-cart" onclick="addToCart('Ensaymada',95,'ensaymada')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="beverages">
+                <div class="product-image" style="background:#FFF8F0"><svg class="svg-product-bg"><use href="#img-latte"/></svg></div>
+                <div class="product-info">
+                    <h3>Spanish Latte</h3>
+                    <p>Double espresso with condensed milk and steamed milk</p>
+                    <div class="product-footer">
+                        <span class="price">₱165</span>
+                        <button class="add-to-cart" onclick="addToCart('Spanish Latte',165,'latte')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-card" data-category="beverages">
+                <div class="product-image" style="background:#FFF8F0"><svg class="svg-product-bg"><use href="#img-matcha"/></svg></div>
+                <div class="product-info">
+                    <h3>Matcha Frappe</h3>
+                    <p>Premium Japanese matcha blended with milk and cream</p>
+                    <div class="product-footer">
+                        <span class="price">₱195</span>
+                        <button class="add-to-cart" onclick="addToCart('Matcha Frappe',195,'matcha')"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- ==================== ABOUT PAGE ==================== -->
+<div id="about" class="page">
+    <div class="about-hero">
+        <h1>Our Story</h1>
+        <p style="color:#666;margin-top:1rem">Baking happiness since 2018</p>
+    </div>
+
+    <div class="about-content">
+        <div class="about-image">
+            <svg viewBox="0 0 800 600" style="width:100%;height:auto;display:block"><use href="#img-baker"/></svg>
+        </div>
+        <div class="about-text">
+            <h2>From Our Kitchen to Your Heart</h2>
+            <p>Sweet Cravings began as a small home kitchen experiment by founder Maria Santos in 2018. What started as weekend baking for family and friends quickly blossomed into a beloved local bakery known for its commitment to quality and authentic flavors.</p>
+            <p>We believe that great baking is both an art and a science. Every recipe has been meticulously developed and tested hundreds of times to achieve the perfect balance of texture, flavor, and presentation.</p>
+            <p>Today, our team of 12 passionate bakers continues to honor that original home-kitchen spirit—using time-honored techniques, refusing to compromise on ingredients, and treating every order as if it were for our own family.</p>
+            <a href="#" class="btn" onclick="showPage('menu'); return false;" style="margin-top:1rem">Explore Our Menu</a>
+        </div>
+    </div>
+
+    <div class="values">
+        <div class="section-header">
+            <h2>Our Values</h2>
+            <div class="divider"></div>
+        </div>
+        <div class="values-grid">
+            <div class="value-card">
+                <h3><i class="fas fa-heart" style="color:var(--caramel);margin-right:0.5rem"></i> Quality First</h3>
+                <p>We never use artificial preservatives or shortcuts. If we wouldn't serve it to our own children, we won't serve it to you.</p>
+            </div>
+            <div class="value-card">
+                <h3><i class="fas fa-seedling" style="color:var(--caramel);margin-right:0.5rem"></i> Local Sourcing</h3>
+                <p>We partner with local Filipino farmers and suppliers to source fresh eggs, dairy, and produce whenever possible.</p>
+            </div>
+            <div class="value-card">
+                <h3><i class="fas fa-users" style="color:var(--caramel);margin-right:0.5rem"></i> Community</h3>
+                <p>We donate unsold baked goods daily to local shelters and sponsor community events throughout the year.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== CONTACT PAGE ==================== -->
+<div id="contact" class="page">
+    <div class="contact-hero">
+        <h1>Get In Touch</h1>
+        <p style="margin-top:1rem;opacity:0.9">We'd love to hear from you</p>
+    </div>
+
+    <div class="contact-container">
+        <div class="contact-info">
+            <h3>Visit Us</h3>
+            <div class="info-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <div><strong>Address</strong><p>Gen. MacArthur<br>Eastern Samar</p></div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-clock"></i>
+                <div><strong>Store Hours</strong><p>Monday - Saturday: 7:00 AM - 8:00 PM<br>Sunday: 8:00 AM - 6:00 PM</p></div>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-phone"></i>
+                <div><strong>Phone</strong><p>09092133437</p></div>
+            </div>
+            <div class="social-links" style="margin-top:2rem">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+
+        <div class="contact-form">
+            <h3 style="font-family:'Playfair Display',serif;color:var(--chocolate);margin-bottom:1.5rem;font-size:1.8rem">Send a Message</h3>
+            <form onsubmit="handleSubmit(event)">
+                <div class="form-group"><label>Full Name</label><input type="text" placeholder="Juan Dela Cruz" required></div>
+                <div class="form-group"><label>Email Address</label><input type="email" placeholder="juan@email.com" required></div>
+                <div class="form-group"><label>Subject</label><input type="text" placeholder="Order Inquiry" required></div>
+                <div class="form-group"><label>Message</label><textarea placeholder="Tell us what you need..." required></textarea></div>
+                <button type="submit" class="btn" style="width:100%">Send Message</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3><i class="fas fa-cookie-bite"></i> Sweet Cravings</h3>
+            <p>Artisan bakery and café serving handcrafted desserts, pastries, and beverages made with love and the finest ingredients.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <p><a href="#" onclick="showPage('home');return false">Home</a></p>
+            <p><a href="#" onclick="showPage('menu');return false">Menu</a></p>
+            <p><a href="#" onclick="showPage('about');return false">About Us</a></p>
+            <p><a href="#" onclick="showPage('contact');return false">Contact</a></p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact Info</h3>
+            <p>Gen. MacArthur, Eastern Samar</p>
+            <p>09092133437</p>
+            <div class="social-links">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Sweet Cravings Artisan Bakery. All rights reserved. | Created for educational purposes.</p>
+    </div>
+</footer>
+
+<script>
+let cart=[];
+function showPage(p){
+    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+    document.getElementById(p).classList.add('active');
+    document.querySelectorAll('.nav-links a').forEach(l=>{
+        l.classList.remove('active');
+        if(l.getAttribute('onclick')&&l.getAttribute('onclick').includes("'"+p+"'")) l.classList.add('active');
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleMobileMenu(){document.getElementById('mobileNav').classList.toggle('open');}
+function addToCart(n,p,i){cart.push({name:n,price:p,img:i,id:Date.now()});updateCart();showToast(n+' added to cart!');}
+function removeFromCart(i){cart.splice(i,1);updateCart();}
+function updateCart(){
+    const c=document.getElementById('cartCount'),ci=document.getElementById('cartItems'),ct=document.getElementById('cartTotal'),cb=document.getElementById('checkoutBtn');
+    c.textContent=cart.length;
+    if(cart.length===0){ci.innerHTML='<p style="color:#999;text-align:center;margin-top:3rem">Your cart is empty</p>';ct.style.display='none';cb.style.display='none';}
+    else{let h='',t=0;cart.forEach((x,j)=>{t+=x.price;h+='<div class="cart-item"><div class="cart-item-image" style="background:var(--peach);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--chocolate)"><i class="fas fa-cookie-bite"></i></div><div class="cart-item-details"><h4>'+x.name+'</h4><p>₱'+x.price.toFixed(2)+'</p></div><button class="remove-item" onclick="removeFromCart('+j+')" title="Remove"><i class="fas fa-trash"></i></button></div>';});
+    ci.innerHTML=h;ct.style.display='flex';document.getElementById('totalAmount').textContent='₱'+t.toFixed(2);cb.style.display='block';}
+}
+function toggleCart(){document.getElementById('cartSidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('active');}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function filterMenu(c,b){document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('#menuGrid .product-card').forEach(i=>{if(c==='all'||i.dataset.category===c){i.style.display='block';i.style.animation='fadeIn 0.4s ease';}else{i.style.display='none';}});}
+function handleSubmit(e){e.preventDefault();showToast('Message sent successfully!');e.target.reset();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('cartSidebar').classList.contains('open'))toggleCart();});
+</script>
+</body>
+</html>
